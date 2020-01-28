@@ -4,12 +4,14 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+### About Bryan!
 
-### More Information
+I’m an experienced and versatile data scientist with proven strength in communication and engineering cloud forward machine learning solutions.
 
-A place to include any other types of information that you'd like to include about yourself.
+I have a strong background in R and Python. My focus as a Machine Learning Engineer is to understand client needs and develop long term, scalable, cloud-based ML solutions hosted on a platform that is most native to the client. I have development experience in both AWS and Azure environments.
+
+My personal interests include cooking, craft beer, weightlifting (see first two), and traveling.
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[tbwhite2@gmail.com](mailto:tbwhite2@gmail.com)
