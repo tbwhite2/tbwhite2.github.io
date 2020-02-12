@@ -13,7 +13,7 @@ be tricky - there are 6714 unique ingredients in the dataset, with almost 11 ing
 
 
 For the data cleaning process, I'm going to use R - this could be done in python - but I really like 
-the flexibility and speed of the [data.table]() package.  After reading this data into R, you'll notice
+the flexibility and speed of the [data.table](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html) package.  After reading this data into R, you'll notice
 the data has the ingredients stored as a vector - which is a pretty inaccessible form for ML.  By using the few lines below you can split each ingredient out, making a long version of the data.
 
 {% highlight r %}
@@ -24,3 +24,4 @@ train_data = train_data[,lapply(.SD,function(x){unlist(x)}),
 
 Once the data is in the long shape, its much more simple to work with.  One of the first things I noticed about this dataset is that the cuisine type classifications are very imbalanced. (See plot below) - 
 
+![_config.yml]({{ site.baseurl }}/images/cusine_freq_plot.png)
