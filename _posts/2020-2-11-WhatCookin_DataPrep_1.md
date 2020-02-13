@@ -24,4 +24,4 @@ train_data = train_data[,lapply(.SD,function(x){unlist(x)}),
 
 Once the data is in the long shape, its much more simple to work with.  One of the first things I noticed about this dataset is that the cuisine type classifications are very imbalanced. (See plot below) - 
 
-![_config.yml](/images/cusine_freq_plot.png)
+![useful image]({{ site.url }}/assets/cusine_freq_plot.png)
