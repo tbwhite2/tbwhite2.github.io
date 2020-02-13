@@ -46,6 +46,6 @@ You may be curious about why I had to wrap as.double() around the median() calcu
 One of the first things I noticed about this dataset is that the cuisine type classifications are very imbalanced. Italian and mexican cusine have 8K and 6.5K recipies while less popular cuisines such as russian and brazillian have around 500.
 This high class imbalance will make prediction difficult - as the most efficient model is to predict that every recipe you see is Italian! In fact, if you knew nothing about the recipe and guessed Italian you'd have a 1 in 5 chance of being right - not bad.  As we move forward with modelling we will have to keep this factor in mind.
 
-![useful image]({{ site.url }}/assets/cusine_freq_plot.png)
+![useful image]({{ site.url }}/images/jekyll-logo.png)
 
 
