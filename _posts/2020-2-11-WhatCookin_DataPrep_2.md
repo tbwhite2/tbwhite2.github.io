@@ -48,4 +48,5 @@ issue by seeing if a term is always part of a bigram or trigram but other tests 
 For now, I'm going to move on and come back as needed.
 
 With the IFICF score in hand - we can now create a prediction matrix with the most predictive N 
-terms and begin modeling! In my next post, I'll begin the modeling process.
+terms and begin modeling! In my next post, I'll begin the modeling process. If you'd like to see the
+full data prep workflow see my [github](https://github.com/tbwhite2/WhatCookin/blob/master/data_exploration.R)
