@@ -23,7 +23,7 @@ would be a great choice as well.
 
 At its core, a random forest model is a collection of decision trees given slightly different build 
 information adn parameters being combined to form a model that is typically more predictive than
-possible with a singletree.  I won't go into the details on the model in this post, but if you're
+possible with a single tree.  I won't go into the details on the model in this post, but if you're
 curious (or just want a refresher) - I like the description in 
 [this link](https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm).  The implementation of
 a random forest in R is very straightforward:
@@ -62,6 +62,8 @@ balanced_accuracy = mean(all_recall)
 {% endhighlight %}
 
 And we can easily visualize the group accuracy with the following plot rendered by ggplot2:
+
 ![cuisine frequency]({{ site.url }}/assets/images/group_acc_hw_rf.png)
 
-Now that we have a model, lets see how well it performs on the Kaggle test set:
+In the next post, I'll look into strategies to improve our model performance by dealing with the 
+class imbalance!
