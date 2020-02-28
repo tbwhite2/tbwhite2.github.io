@@ -7,7 +7,7 @@ This post is a continuation of my series of posts on the now extremely expired
 Kaggle competition [What's Cooking](https://www.kaggle.com/c/whats-cooking-kernels-only/data).  In 
 my previous post, 
 [Hello World Model](https://tbwhite2.github.io/Hello_World_Model/), I created a basic random forest
-model in R and found that while its overall accuracy was quite high (), its balanced accuracy () 
+model in R and found that while its overall accuracy was quite high (93%), its balanced accuracy (76%) 
 could be improved.  In this post, I'll look at some strategies for accommodating class imbalance while
 still using the same random forest multiclass classifier.
 
