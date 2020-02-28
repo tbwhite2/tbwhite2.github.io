@@ -100,33 +100,5 @@ rf_samp_1 = randomForest(x = train_test$train_dt_x,
 Thinking I could get a similar improvement to accuracy by making the samp size a bit more representative 
 of the data, I tried another sample size method :
 
-{% highlight r %}
 
-cuisine_freq = table(train_test$train_dt_y)
-samp_prop = .8
-equal_samp_size = round(cuisine_freq*samp_prop)
-new_sample_prop = log(equal_samp_size/min(equal_samp_size))
-new_sample_prop[new_sample_prop<1]= 1
-new_samp_vec = round(new_sample_prop*min(equal_samp_size))
-
-rf_samp_2 = randomForest(x = train_test$train_dt_x,
-                        y = train_test$train_dt_y,
-                        ntree = 2500,
-                        mtry = 10, 
-                        sampsize = new_samp_vec,
-                        replace = F)
-{% endhighlight %}
-
-Unfortunately, it did not improve performance - in fact its performance is very similar to the base 
-model (overall accuracy : 93%, balanced accuracy : 79%).
-
-There are many other ways we could address the class imbalance outside of model configurations - these
-change the training data by either over sampling the smaller classes, or undersampling the larger ones, 
-or create new artificial minority class examples via [SMOTE](http://rikunert.com/SMOTE_explained).  I 
-won't cover these here but they may be useful in the future.
-
-As this post shows, setting these optional parameters can really impact the performance of your model.
-It also shows that it can quickly get overwhelming keeping track of all the different configurations 
-and resulting performance data.  In my next post, I'll talk about how we can deploy hyperparameter 
-tuning to make this process more automated.
 
