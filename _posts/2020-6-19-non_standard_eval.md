@@ -1,13 +1,8 @@
----
-title: "What the HECK is NSE"
-author: "Bryan"
-date: "6/12/2020"
-output: 
-  html_document: 
-    keep_md: yes
-    theme: paper
----
 
+---
+layout: post
+title: What the HECK is NSE
+---
 
 
 Non standard evaluation (NSE) sounds like a scary subject. In this post, I'll work to demystify the 
