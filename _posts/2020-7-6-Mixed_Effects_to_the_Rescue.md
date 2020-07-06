@@ -1,0 +1,160 @@
+---
+layout: post
+title: Mixed Effects to the Rescue!
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+
+
+# Linear Mixed Models - Regression for Real World Data
+
+Linear and logistic regression work great on canned example data found on blogs and websites but
+run into many problems when they are deployed in the wild.  Data is often grouped into categories 
+that are imbalanced (some customers have more purchasing history than others), hierarchical 
+(products can be part of one 'family' with slight differences), and non independent (sales people 
+have different impacts on outcomes).  In each of these examples, standard regression 
+techniques fail to properly address the structure of the data.  Linear Mixed Models (LMM) work like 
+standard regression, but with additional terms called random effects that capture variation not 
+explained by the independent variables used to create the model. 
+
+
+```r
+fast_food = fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv')
+fast_food[,item := tolower(item)]
+fast_food[,has_chicken := grepl('chicken', item)]
+fast_food[,chicken_strip := grepl('strip|popcorn|nuggets|chicken fries|tenders',item)]
+fast_food[,is_salad := grepl('salad',item)]
+
+subway_subset = fast_food[restaurant == 'Subway']
+fast_food = fast_food[!(restaurant == 'Subway' & grepl('footlong',item)) & !(restaurant == 'Subway' & grepl('kids mini',item))]
+fast_food[restaurant == 'Subway', sandwich := grepl('6', item)]
+fast_food[, is_wrap := grepl('wrap', item)]
+fast_food[is.na(sandwich),sandwich := grepl('sandwich', item)]
+```
+
+## Difference Between Random and Fixed Effects
+
+Fixed Effects are categorical predictors where you know all the possible levels.  Some Examples:
+
+- Drink Size (S/M/L)
+
+- Is the chicken fried? (Y/N)
+
+Random Effects are categorical predictors that your data only captures a subset of, of all possible 
+levels in the full data.  In practice, they allow differing levels of variation and association 
+to the response creating non constant error distributions.
+
+- Restaurant Chain 
+
+- Items on customer orders
+
+## Benefits of incorporating random effects in your model
+
+Random effects have several benefits, the main ones are:
+
+- Enable us to make better predictions on sparse groups using partial pooling
+
+- Allow us to explicitly model non independence in data, such as repeated measurements
+
+- Better capture hierarchical or clustered data such as geography or product lines
+
+
+### Imbalanced Data
+The Random Effect term in a LMM uses a property called *Partial Pooling*.  Partial pooling allows the model
+to create an overall effect for a predictor that will pull smaller groups toward the group effect while 
+larger groups will be more distinct.  This is similar to how in Bayesian statistics repeated measurements
+improve your confidence in an estimate.
+
+In the below example, we try to predict the amount of calories in a salad based on the amount of fat.
+By incorporating a random effect for the restaurant, we can get a stronger estimate for restaurants
+with fewer salad options.
+
+
+```r
+salad_data = fast_food[is_salad == T]
+salad_data[,fried := grepl('crispy',item)]
+mixed_effects = lmer(calories ~ total_fat + (1|restaurant), data = salad_data)
+fixed_effects = lm(calories ~ total_fat, data = salad_data)
+AIC(fixed_effects, mixed_effects)
+```
+
+```
+##               df      AIC
+## fixed_effects  3 736.9616
+## mixed_effects  4 720.9785
+```
+
+### Non Independence 
+
+Non independence of measurements is very common in real world data.  Below is an example using 
+chicken strips, nuggets, fries, and tenders.  Each restaurant has a signature method for preparing 
+chicken and this preparation will impact the caloric content.  Treating each restaurant as a fixed effect
+rapidly increases the degrees of freedom - and doesn't consider that this data only represents a subset
+of all restaurants with chicken tenders!
+
+Making restaurant a random effect better represents the data and makes the model more generalizeable.
+The mixed effect model also has a lower Akaike's Information Criterion (a measure of how model fit - lower 
+better).
+
+
+
+
+```r
+chicken_strip_data = fast_food[chicken_strip == T]
+chicken_strip_data[,count := as.integer(sub('[^0-9]+','',item))]
+```
+
+```
+## Warning in eval(jsub, SDenv, parent.frame()): NAs introduced by coercion
+```
+
+```r
+chicken_strip_data = chicken_strip_data[!is.na(count)]
+mixed_effects_chicken = lmer(calories ~ count + (1|restaurant), data = chicken_strip_data)
+fixed_effects_chicken = lm(calories ~ count, data = chicken_strip_data)
+AIC(mixed_effects_chicken, fixed_effects_chicken)
+```
+
+```
+##                       df      AIC
+## mixed_effects_chicken  4 624.9130
+## fixed_effects_chicken  3 649.4055
+```
+
+### Hierarchical Relationships
+
+Nested relationships are also very common in day to day data.  In the example below - subway item 
+belongs to a class of item , sandwich, salad, etc and a flavor meatball, tuna, etc.  Representing this
+structure in the data would require many separate models if using a traditional fixed effects model.
+By incorporating random effects, we can use the structure in the data to get a better overall fit.
+
+
+```r
+subway_subset[,item_general := ifelse(grepl('6""', item),'6_sandwich',NA)]
+subway_subset[is.na(item_general),item_general := ifelse(grepl('footlong', item),'12_sandwich',NA)]
+subway_subset[is.na(item_general),item_general := ifelse(grepl('kids mini', item),'3_sandwich',NA)]
+
+
+subway_subset[is.na(item_general),item_general := ifelse(grepl('salad', item),'salad',NA)]
+subway_subset[is.na(item_general),item_general := ifelse(grepl('wrap', item),'wrap',NA)]
+subway_subset[is.na(item_general),item_general := ifelse(grepl('pizza', item),'pizza',NA)]
+
+subway_subset[,item := sub('6""|footlong|kids mini','',item)]
+subway_subset[,item := sub('6""|footlong|kids mini|salad|wrap|pizza','',item)]
+
+subway_model = lmer(protein ~ total_carb +  (1|item_general) + (1|item), data = subway_subset)
+```
+
+
+## sauce
+
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5970551/
+
+http://lme4.r-forge.r-project.org/book/Ch2.pdf
+
+https://stats.idre.ucla.edu/other/mult-pkg/introduction-to-generalized-linear-mixed-models/
+
+https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
+
