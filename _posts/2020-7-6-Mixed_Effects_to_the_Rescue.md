@@ -8,16 +8,29 @@ output:
 
 
 
-# Linear Mixed Models - Regression for Real World Data
+
 
 Linear and logistic regression work great on canned example data found on blogs and websites but
 run into many problems when they are deployed in the wild.  Data is often grouped into categories 
 that are imbalanced (some customers have more purchasing history than others), hierarchical 
 (products can be part of one 'family' with slight differences), and non independent (sales people 
 have different impacts on outcomes).  In each of these examples, standard regression 
-techniques fail to properly address the structure of the data.  Linear Mixed Models (LMM) work like 
+techniques fail to properly address the structure of the data.  
+
+## Linear Mixed Models - Regression for Real World Data
+Linear Mixed Models (LMM) work like 
 standard regression, but with additional terms called random effects that capture variation not 
 explained by the independent variables used to create the model. 
+
+
+#### THE DATA
+
+For this post I'm going to use some fast food data provided by tidy tuesday.  If you haven't heard of
+[Tidy Tuesday](https://twitter.com/hashtag/tidytuesday?lang=en) - check it out, lots of great visualization examples in R.
+
+This data works great for LMM's because its grouped, it has inherent hierarches, and there's large 
+imbalances of items between groups.  All of these characteristcs would be a headache for traditional 
+linear models.  We'll see how adding random effects helps. 
 
 
 ```r
